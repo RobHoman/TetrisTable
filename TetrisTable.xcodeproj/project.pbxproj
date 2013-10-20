@@ -25,6 +25,12 @@
 		C584E0E4181366EB00E4A252 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C584E0BE181366EB00E4A252 /* UIKit.framework */; };
 		C584E0EC181366EB00E4A252 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C584E0EA181366EB00E4A252 /* InfoPlist.strings */; };
 		C584E0EE181366EB00E4A252 /* TetrisTableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C584E0ED181366EB00E4A252 /* TetrisTableTests.m */; };
+		C597C16A1813682B006EC06A /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = C597C1691813682B006EC06A /* .gitkeep */; };
+		C597C16D181368CA006EC06A /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C16C181368CA006EC06A /* Cell.m */; };
+		C597C170181368D8006EC06A /* Table.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C16F181368D8006EC06A /* Table.m */; };
+		C597C17318136942006EC06A /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = C597C17218136942006EC06A /* .gitkeep */; };
+		C597C1761813695B006EC06A /* CellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C1751813695B006EC06A /* CellTests.m */; };
+		C597C17918136967006EC06A /* TableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C17818136967006EC06A /* TableTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +67,16 @@
 		C584E0E9181366EB00E4A252 /* TetrisTableTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TetrisTableTests-Info.plist"; sourceTree = "<group>"; };
 		C584E0EB181366EB00E4A252 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C584E0ED181366EB00E4A252 /* TetrisTableTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TetrisTableTests.m; sourceTree = "<group>"; };
+		C597C1691813682B006EC06A /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		C597C16B181368CA006EC06A /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell.h; sourceTree = "<group>"; };
+		C597C16C181368CA006EC06A /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cell.m; sourceTree = "<group>"; };
+		C597C16E181368D8006EC06A /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
+		C597C16F181368D8006EC06A /* Table.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Table.m; sourceTree = "<group>"; };
+		C597C17218136942006EC06A /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		C597C1741813695B006EC06A /* CellTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellTests.h; sourceTree = "<group>"; };
+		C597C1751813695B006EC06A /* CellTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellTests.m; sourceTree = "<group>"; };
+		C597C17718136967006EC06A /* TableTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableTests.h; sourceTree = "<group>"; };
+		C597C17818136967006EC06A /* TableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +140,7 @@
 		C584E0C4181366EB00E4A252 /* TetrisTable */ = {
 			isa = PBXGroup;
 			children = (
+				C597C1681813682B006EC06A /* Model */,
 				C584E0CD181366EB00E4A252 /* AppDelegate.h */,
 				C584E0CE181366EB00E4A252 /* AppDelegate.m */,
 				C584E0D0181366EB00E4A252 /* Main.storyboard */,
@@ -151,6 +168,7 @@
 		C584E0E7181366EB00E4A252 /* TetrisTableTests */ = {
 			isa = PBXGroup;
 			children = (
+				C597C17118136942006EC06A /* ModelTests */,
 				C584E0ED181366EB00E4A252 /* TetrisTableTests.m */,
 				C584E0E8181366EB00E4A252 /* Supporting Files */,
 			);
@@ -164,6 +182,30 @@
 				C584E0EA181366EB00E4A252 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C597C1681813682B006EC06A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C597C1691813682B006EC06A /* .gitkeep */,
+				C597C16B181368CA006EC06A /* Cell.h */,
+				C597C16C181368CA006EC06A /* Cell.m */,
+				C597C16E181368D8006EC06A /* Table.h */,
+				C597C16F181368D8006EC06A /* Table.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C597C17118136942006EC06A /* ModelTests */ = {
+			isa = PBXGroup;
+			children = (
+				C597C17218136942006EC06A /* .gitkeep */,
+				C597C1741813695B006EC06A /* CellTests.h */,
+				C597C1751813695B006EC06A /* CellTests.m */,
+				C597C17718136967006EC06A /* TableTests.h */,
+				C597C17818136967006EC06A /* TableTests.m */,
+			);
+			path = ModelTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +287,7 @@
 				C584E0D6181366EB00E4A252 /* Shader.vsh in Resources */,
 				C584E0DB181366EB00E4A252 /* Images.xcassets in Resources */,
 				C584E0D4181366EB00E4A252 /* Shader.fsh in Resources */,
+				C597C16A1813682B006EC06A /* .gitkeep in Resources */,
 				C584E0C9181366EB00E4A252 /* InfoPlist.strings in Resources */,
 				C584E0D2181366EB00E4A252 /* Main.storyboard in Resources */,
 			);
@@ -255,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C584E0EC181366EB00E4A252 /* InfoPlist.strings in Resources */,
+				C597C17318136942006EC06A /* .gitkeep in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +310,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C584E0D9181366EB00E4A252 /* ViewController.m in Sources */,
+				C597C16D181368CA006EC06A /* Cell.m in Sources */,
 				C584E0CF181366EB00E4A252 /* AppDelegate.m in Sources */,
+				C597C170181368D8006EC06A /* Table.m in Sources */,
 				C584E0CB181366EB00E4A252 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +322,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C584E0EE181366EB00E4A252 /* TetrisTableTests.m in Sources */,
+				C597C1761813695B006EC06A /* CellTests.m in Sources */,
+				C597C17918136967006EC06A /* TableTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +526,7 @@
 				C584E0F3181366EB00E4A252 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C584E0F4181366EB00E4A252 /* Build configuration list for PBXNativeTarget "TetrisTableTests" */ = {
 			isa = XCConfigurationList;
@@ -486,6 +535,7 @@
 				C584E0F6181366EB00E4A252 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
