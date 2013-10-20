@@ -10,4 +10,9 @@
 
 @interface Cell : NSObject
 
+- (id)init:(int)red :(int) green :(int) blue;
+- (int)getRed;
+- (int)getGreen;
+- (int)getBlue;
+
 @end
