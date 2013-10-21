@@ -28,6 +28,7 @@
 		C597C16D181368CA006EC06A /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C16C181368CA006EC06A /* Cell.m */; };
 		C597C170181368D8006EC06A /* Table.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C16F181368D8006EC06A /* Table.m */; };
 		C597C17B18137169006EC06A /* CellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C17A18137169006EC06A /* CellTests.m */; };
+		C597C17D1814F8D5006EC06A /* TableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C597C17C1814F8D5006EC06A /* TableTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		C597C16E181368D8006EC06A /* Table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Table.h; sourceTree = "<group>"; };
 		C597C16F181368D8006EC06A /* Table.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Table.m; sourceTree = "<group>"; };
 		C597C17A18137169006EC06A /* CellTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellTests.m; sourceTree = "<group>"; };
+		C597C17C1814F8D5006EC06A /* TableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				C597C17A18137169006EC06A /* CellTests.m */,
+				C597C17C1814F8D5006EC06A /* TableTests.m */,
 			);
 			path = ModelTests;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 			files = (
 				C584E0EE181366EB00E4A252 /* TetrisTableTests.m in Sources */,
 				C597C17B18137169006EC06A /* CellTests.m in Sources */,
+				C597C17D1814F8D5006EC06A /* TableTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

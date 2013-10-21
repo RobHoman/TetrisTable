@@ -8,6 +8,34 @@
 
 #import "Table.h"
 
+@interface Table ()
+{
+    int _width;
+    int _height;
+}
+@end
+
 @implementation Table
+
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        _width = TABLE_WIDTH;
+        _height = TABLE_HEIGHT;
+    }
+    return self;
+}
+
+- (int)getWidth
+{
+    return _width;
+}
+
+- (int)getHeight
+{
+    return _height;
+}
 
 @end

@@ -8,6 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Cell.h"
+
+
+#define TABLE_WIDTH ((int) 10)
+#define TABLE_HEIGHT ((int) 20)
+
 @interface Table : NSObject
+
+- (id)init;
+- (int)getWidth;
+- (int)getHeight;
 
 @end
