@@ -19,5 +19,5 @@
 - (id)init;
 - (int)getWidth;
 - (int)getHeight;
-
+- (Cell *)getCell:(int) row :(int) column;
 @end

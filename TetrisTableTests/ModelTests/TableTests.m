@@ -44,4 +44,21 @@
     assert(expected == actual);
 }
 
+/**
+ * Verify that every cell is initialized to black.
+ */
+- (void)testConstructor
+{
+    for (int i = 0; i < TABLE_HEIGHT; i++)
+    {
+        for (int j = 0; j < TABLE_WIDTH; j++)
+        {
+            Cell *cell = [_table getCell:i :j];
+            assert([cell getRed] == 0);
+            assert([cell getGreen] == 0);
+            assert([cell getBlue] == 0);
+        }
+    }
+}
+
 @end

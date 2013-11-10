@@ -8,11 +8,19 @@
 
 #import "AppDelegate.h"
 
+
 @implementation AppDelegate
+
+@synthesize glView=_glView;
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    self.glView = [[OpenGLView alloc] initWithFrame:screenBounds];//] autorelease]; //no autorelease in ARC
+    [self.window addSubview:_glView];
+    
+    
     return YES;
 }
 							
