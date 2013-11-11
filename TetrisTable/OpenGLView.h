@@ -21,6 +21,8 @@
     GLuint _modelViewUniform;
     
     float _currentRotation;
+    
+    GLuint _depthRenderBuffer;
 }
 
 + (Class)layerClass;
