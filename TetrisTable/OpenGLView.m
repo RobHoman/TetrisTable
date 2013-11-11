@@ -122,6 +122,11 @@ const GLubyte Indices[] = {
     
 }
 
+- (void)setupDisplayLink {
+    CADisplayLink* displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -132,7 +137,7 @@ const GLubyte Indices[] = {
         [self setupFrameBuffer];
         [self compileShaders];
         [self setupVBOs];
-        [self render];
+        [self setupDisplayLink];
     }
     return self;
 }
@@ -185,7 +190,7 @@ const GLubyte Indices[] = {
                               GL_RENDERBUFFER, _colorRenderBuffer);
 }
 
-- (void)render {
+- (void)render:(CADisplayLink*)displayLink {
     glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     
@@ -198,6 +203,9 @@ const GLubyte Indices[] = {
     // make the modelView matrix
     CC3GLMatrix *modelView = [CC3GLMatrix matrix];
     [modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
+    // incorporate rotation
+    _currentRotation += displayLink.duration * 90;
+    [modelView rotateBy:CC3VectorMake(_currentRotation, _currentRotation, 0)];
     glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
     
     // set portion of view used for rendering
