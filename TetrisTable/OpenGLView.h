@@ -23,6 +23,7 @@
     float _currentRotation;
     
     GLuint _depthRenderBuffer;
+    
 }
 
 + (Class)layerClass;

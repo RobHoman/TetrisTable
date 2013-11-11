@@ -8,6 +8,7 @@
 
 #import "OpenGLView.h"
 #import "CC3GLMatrix.h"
+#import "Table.h"
 
 
 typedef struct {
@@ -27,7 +28,7 @@ typedef struct {
 //    2, 3, 0
 //};
 
-const Vertex Vertices[] = {
+const Vertex _vertices[] = {
     {{1, -1, 0}, {1, 0, 0, 1}},
     {{1, 1, 0}, {1, 0, 0, 1}},
     {{-1, 1, 0}, {0, 1, 0, 1}},
@@ -38,7 +39,7 @@ const Vertex Vertices[] = {
     {{-1, -1, -1}, {0, 1, 0, 1}}
 };
 
-const GLubyte Indices[] = {
+const GLubyte _indices[] = {
     // Front
     0, 1, 2,
     2, 3, 0,
@@ -59,7 +60,17 @@ const GLubyte Indices[] = {
     0, 7, 4
 };
 
+@interface OpenGLView () {
+    Table* _table;
+    //Vertex* _vertices;
+    //GLubyte* _indices;
+}
+
+@end
+
 @implementation OpenGLView
+
+
 
 - (GLuint)compileShader:(NSString*)shaderName withType:(GLenum)shaderType {
     
@@ -145,12 +156,12 @@ const GLubyte Indices[] = {
     GLuint vertexBuffer;
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), _vertices, GL_DYNAMIC_DRAW);
     
     GLuint indexBuffer;
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(_indices), _indices, GL_DYNAMIC_DRAW);
     
 }
 
@@ -171,18 +182,20 @@ const GLubyte Indices[] = {
         [self compileShaders];
         [self setupVBOs];
         [self setupDisplayLink];
+        
+        //construct a table
+        _table = [[Table alloc] init];
+        
+        //initialize the vertex and indices buffers
+        int numVertices = [_table getWidth] * [_table getHeight] * 4; //4 vertices per square
+        //_vertices = (Vertex *) malloc(numVertices * sizeof(Vertex));
+        int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
+        //_indices = (GLubyte *) malloc(numIndices * sizeof(GLuint));
+        
+        
     }
     return self;
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
@@ -231,6 +244,9 @@ const GLubyte Indices[] = {
 }
 
 - (void)render:(CADisplayLink*)displayLink {
+    // make vertices and indices based off the table
+    [self makeVerticesAndIndices];
+    
     glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -244,9 +260,12 @@ const GLubyte Indices[] = {
     // make the modelView matrix
     CC3GLMatrix *modelView = [CC3GLMatrix matrix];
     [modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
+    
     // incorporate rotation
     _currentRotation += displayLink.duration * 90;
     [modelView rotateBy:CC3VectorMake(_currentRotation, _currentRotation, 0)];
+    
+    // disable rotation and translation
     glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
     
     // set portion of view used for rendering
@@ -259,19 +278,64 @@ const GLubyte Indices[] = {
                           sizeof(Vertex), (GLvoid*) (sizeof(float) * 3));
     
     // 3
-    glDrawElements(GL_TRIANGLES, sizeof(Indices)/sizeof(Indices[0]),
+    glDrawElements(GL_TRIANGLES, sizeof(_indices)/sizeof(_indices[0]),
                    GL_UNSIGNED_BYTE, 0);
     
     [_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-//// Replace dealloc method with this... in auto-reference counting mode though, we don't need it
-//- (void)dealloc
-//{
-//    [_context release];
-//    _context = nil;
-//    [super dealloc];
-//}
+- (void)makeVerticesAndIndices {
+    /*float width = 2/10;
+    float height = 2/10;
+    
+    for (int i = 0; i < [_table getHeight]; i++)
+    {
+        for (int j = 0; j < [_table getWidth]; j++)
+        {
+            float baseX = -1 + i * width;
+            float baseY = -1 + j * width;
+            Vertex vertex1 = {
+                {baseX, baseY + height, 0},
+                {1, 0, 0, 1}
+            };
+            Vertex vertex2 = {
+                {baseX + width, baseY + height, 0},
+                {0, 1, 0, 1}
+            };
+            Vertex vertex3 = {
+                {baseX + width, baseY, 0},
+                {0, 0, 1, 1}
+            };
+            Vertex vertex4 = {
+                {baseX, baseY, 0},
+                {0, 0, 0, 1}
+            };
+            int startIndex = (i * [_table getWidth] + j) * 4;
+            _vertices[startIndex] = vertex1;
+            _vertices[startIndex + 1] = vertex2;
+            _vertices[startIndex + 2] = vertex3;
+            _vertices[startIndex + 3] = vertex4;
+            
+            int indicesStartIndex = (i * [_table getWidth] + j) * 6;
+            _indices[indicesStartIndex] = startIndex;
+            _indices[indicesStartIndex + 1] = startIndex + 1;
+            _indices[indicesStartIndex + 2] = startIndex + 2;
+            _indices[indicesStartIndex + 3] = startIndex + 2;
+            _indices[indicesStartIndex + 4] = startIndex + 3;
+            _indices[indicesStartIndex + 5] = startIndex;
+            
+        }
+    }*/
+}
+
+- (void)dealloc
+{
+    //[_context release]; //nonARC
+    //_context = nil; //nonARC
+    //[super dealloc]; //nonARC
+    
+}
+
 
 
 @end
