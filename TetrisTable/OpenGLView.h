@@ -16,6 +16,8 @@
     
     GLuint _positionSlot;
     GLuint _colorSlot;
+    
+    GLuint _projectionUniform;
 }
 
 + (Class)layerClass;
