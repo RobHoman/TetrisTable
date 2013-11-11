@@ -16,10 +16,10 @@ typedef struct {
 } Vertex;
 
 const Vertex Vertices[] = {
-    {{1, -1, -7}, {1, 0, 0, 1}},
-    {{1, 1, -7}, {0, 1, 0, 1}},
-    {{-1, 1, -7}, {0, 0, 1, 1}},
-    {{-1, -1, -7}, {0, 0, 0, 1}}
+    {{1, -1, 0}, {1, 0, 0, 1}},
+    {{1, 1, 0}, {0, 1, 0, 1}},
+    {{-1, 1, 0}, {0, 0, 1, 1}},
+    {{-1, -1, 0}, {0, 0, 0, 1}}
 };
 
 const GLubyte Indices[] = {
@@ -103,6 +103,9 @@ const GLubyte Indices[] = {
     
     // set the projection input variable
     _projectionUniform = glGetUniformLocation(programHandle, "Projection");
+    
+    // set the modelView input variable
+    _modelViewUniform = glGetUniformLocation(programHandle, "Modelview");
 }
 
 - (void)setupVBOs {
@@ -191,6 +194,11 @@ const GLubyte Indices[] = {
     float h = 4.0f * self.frame.size.height / self.frame.size.width;
     [projection populateFromFrustumLeft:-2 andRight:2 andBottom:-h/2 andTop:h/2 andNear:4 andFar:10];
     glUniformMatrix4fv(_projectionUniform, 1, 0, projection.glMatrix);
+    
+    // make the modelView matrix
+    CC3GLMatrix *modelView = [CC3GLMatrix matrix];
+    [modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
+    glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
     
     // set portion of view used for rendering
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
