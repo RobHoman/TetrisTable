@@ -116,14 +116,14 @@
 		}
 		return self;
 	} else {
-		[self release];
+		//[self release]; //nonARC
 		return [[CC3GLArrayMatrix alloc] init];
 	}
 }
 
 +(id) matrix {
 	if ( [self isSubclassOfClass: [CC3GLArrayMatrix class]] ) {
-		return [[[self alloc] init] autorelease];
+		return [[self alloc] init]; //autorelease]; //nonARC
 	} else {
 		return [CC3GLArrayMatrix matrix];
 	}
@@ -136,14 +136,14 @@
 		}
 		return self;
 	} else {
-		[self release];
+		//[self release]; //nonARC
 		return [[CC3GLArrayMatrix alloc] initIdentity];
 	}
 }
 
 +(id) identity {
 	if ( [self isSubclassOfClass: [CC3GLArrayMatrix class]] ) {
-		return [[[self alloc] initIdentity] autorelease];
+		return [[self alloc] initIdentity]; // autorelease]; //nonARC
 	} else {
 		return [CC3GLArrayMatrix identity];
 	}
@@ -156,14 +156,14 @@
 		}
 		return self;
 	} else {
-		[self release];
+		//[self release]; //nonARC
 		return [[CC3GLArrayMatrix alloc] initFromGLMatrix: aGLMtx];
 	}
 }
 
 +(id) matrixFromGLMatrix: (GLfloat*) aGLMtx {
 	if ( [self isSubclassOfClass: [CC3GLArrayMatrix class]] ) {
-		return [[[self alloc] initFromGLMatrix: aGLMtx] autorelease];
+		return [[self alloc] initFromGLMatrix: aGLMtx]; //autorelease]; //nonARC
 	} else {
 		return [CC3GLArrayMatrix matrixFromGLMatrix: aGLMtx];
 	}
@@ -179,7 +179,7 @@
 			}
 		}
 	} else {
-		[self release];
+		//[self release]; //nonARC
 		self = [[CC3GLArrayMatrix alloc] initWithFirstElement: e00 remainingElements: args];
 	}
 	return self;
@@ -198,24 +198,24 @@
 	va_start(args, e00);
 	CC3GLMatrix* mtx = [[CC3GLArrayMatrix alloc] initWithFirstElement: e00 remainingElements: args];
 	va_end(args);
-	return [mtx autorelease];
+	return mtx; //autorelease]; //nonARC
 }
 
 -(id) initOnGLMatrix: (GLfloat*) aGLMtx {
-	[self release];
+	//[self release]; //nonARC
 	return [[CC3GLPointerMatrix alloc] initOnGLMatrix: aGLMtx];
 }
 
 +(id) matrixOnGLMatrix: (GLfloat*) aGLMtx {
 	if ( [self isSubclassOfClass: [CC3GLPointerMatrix class]] ) {
-		return [[[self alloc] initOnGLMatrix: aGLMtx] autorelease];
+		return [[self alloc] initOnGLMatrix: aGLMtx]; // autorelease]; //nonARC
 	} else {
 		return [CC3GLPointerMatrix matrixOnGLMatrix: aGLMtx];
 	}
 }
 
 - (id) copyWithZone: (NSZone*) zone {
-	return [[CC3GLArrayMatrix matrixFromGLMatrix: self.glMatrix] retain];
+	return [CC3GLArrayMatrix matrixFromGLMatrix: self.glMatrix]; //retain]; //nonARC
 }
 
 -(NSString*) description {
