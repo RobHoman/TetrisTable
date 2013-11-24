@@ -46,5 +46,11 @@
     return _blue;
 }
 
+- (void)setColor:(int)red :(int) green :(int) blue
+{
+    _red = red;
+    _green = green;
+    _blue = blue;
+}
 
 @end

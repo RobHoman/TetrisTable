@@ -306,29 +306,43 @@ const Vertex _vertices[] = {
     float width = .2;
     float height = .1;
     
+    int switchValue = 0;
+    
     for (int i = 0; i < [_table getHeight]; i++)
     {
         for (int j = 0; j < [_table getWidth]; j++)
         {
+            switchValue++;
+            if (switchValue % 3 == 0)
+            {
+                [[_table getCell:i :j] setColor:127 :127 :0];
+            }
+            else if (switchValue % 3 == 1)
+            {
+                [[_table getCell:i :j] setColor:127 :0 :127];
+            }
+            else
+            {
+                [[_table getCell:i :j] setColor:0 :127 :127];
+            }
+            
+            
+            //now make the vertices and indices
             float baseX = -1 + j * width;
             float baseY = -1 + i * height;
             
-            Vertex vertex1 = {
-                {baseX, baseY + height, 0},
-                {1, 0, 0, 1}
-            };
-            Vertex vertex2 = {
-                {baseX + width, baseY + height, 0},
-                {0, 1, 0, 1}
-            };
-            Vertex vertex3 = {
-                {baseX + width, baseY, 0},
-                {1, 0, 0, 1}
-            };
-            Vertex vertex4 = {
-                {baseX, baseY, 0},
-                {0, 1, 0, 1}
-            };
+            Cell* cell = [_table getCell:i :j];
+            
+            float r = ((float)[cell getRed]) / 255;
+            float g = ((float)[cell getGreen]) / 255;
+            float b = ((float)[cell getBlue]) / 255;
+            float a = 1;
+            
+            Vertex vertex1 = [self makeVertex:baseX :baseY + height :0 :r :g :b :a];
+            Vertex vertex2 = [self makeVertex:baseX + width :baseY + height :0 :r :g :b :a];
+            Vertex vertex3 = [self makeVertex:baseX + width :baseY :0 :r :g :b :a];
+            Vertex vertex4 = [self makeVertex:baseX :baseY :0 :r :g :b :a];
+            
             int startIndex = ((i * [_table getWidth]) + j) * 4;
             _vertices[startIndex] = vertex1;
             _vertices[startIndex + 1] = vertex2;

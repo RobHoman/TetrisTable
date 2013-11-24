@@ -15,4 +15,6 @@
 - (int)getGreen;
 - (int)getBlue;
 
+- (void)setColor:(int)red :(int) green :(int) blue;
+
 @end
