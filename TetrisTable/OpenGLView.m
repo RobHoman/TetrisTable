@@ -27,7 +27,7 @@ typedef struct {
 //    0, 1, 2,
 //    2, 3, 0
 //};
-
+/*
 const Vertex _vertices[] = {
     {{1, -1, 0}, {1, 0, 0, 1}},
     {{1, 1, 0}, {1, 0, 0, 1}},
@@ -38,8 +38,10 @@ const Vertex _vertices[] = {
     {{-1, 1, -1}, {0, 1, 0, 1}},
     {{-1, -1, -1}, {0, 1, 0, 1}}
 };
+ */
 
-const GLubyte _indices[] = {
+
+/*const GLubyte Indices[] = {
     // Front
     0, 1, 2,
     2, 3, 0,
@@ -58,12 +60,16 @@ const GLubyte _indices[] = {
     // Bottom
     0, 3, 7,
     0, 7, 4
-};
+};*/
+
+
+
+
 
 @interface OpenGLView () {
     Table* _table;
-    //Vertex* _vertices;
-    //GLubyte* _indices;
+    Vertex* _vertices;
+    GLushort* _indices;
 }
 
 @end
@@ -145,23 +151,31 @@ const GLubyte _indices[] = {
     glEnableVertexAttribArray(_colorSlot);
     
     // set the projection input variable
-    _projectionUniform = glGetUniformLocation(programHandle, "Projection");
+    //_projectionUniform = glGetUniformLocation(programHandle, "Projection");
     
     // set the modelView input variable
-    _modelViewUniform = glGetUniformLocation(programHandle, "Modelview");
+    //_modelViewUniform = glGetUniformLocation(programHandle, "Modelview");
 }
 
 - (void)setupVBOs {
+    //malloc the data object buffers
+    int numVertices = [_table getWidth] * [_table getHeight] * 4; //4 vertices per square
+    _vertices = (Vertex *) malloc(numVertices * sizeof(Vertex));
+    int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
+    _indices = (GLushort *) malloc(numIndices * sizeof(GLushort));
+    
+    //populate the data object buffers
+    [self makeVerticesAndIndices];
     
     GLuint vertexBuffer;
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), _vertices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(_vertices[0]), _vertices, GL_STATIC_DRAW);
     
     GLuint indexBuffer;
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(_indices), _indices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(_indices[0]), _indices, GL_STATIC_DRAW);
     
 }
 
@@ -174,6 +188,9 @@ const GLubyte _indices[] = {
 {
     self = [super initWithFrame:frame];
     if (self) {
+        //construct a table
+        _table = [[Table alloc] init];
+        
         [self setupLayer];
         [self setupContext];
         [self setupDepthBuffer];
@@ -182,23 +199,24 @@ const GLubyte _indices[] = {
         [self compileShaders];
         [self setupVBOs];
         [self setupDisplayLink];
-        
-        //construct a table
-        _table = [[Table alloc] init];
-        
-        //initialize the vertex and indices buffers
-        int numVertices = [_table getWidth] * [_table getHeight] * 4; //4 vertices per square
-        //_vertices = (Vertex *) malloc(numVertices * sizeof(Vertex));
-        int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
-        //_indices = (GLubyte *) malloc(numIndices * sizeof(GLuint));
-        
-        
     }
     return self;
 }
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
+}
+
+- (Vertex)makeVertex:(float) x :(float) y :(float) z :(float) r :(float) g :(float) b :(float) a {
+    Vertex v;
+    v.Position[0] = x;
+    v.Position[1] = y;
+    v.Position[2] = z;
+    v.Color[0] = r;
+    v.Color[1] = g;
+    v.Color[2] = b;
+    v.Color[3] = a;
+    return v;
 }
 
 - (void)setupLayer {
@@ -244,29 +262,27 @@ const GLubyte _indices[] = {
 }
 
 - (void)render:(CADisplayLink*)displayLink {
-    // make vertices and indices based off the table
-    [self makeVerticesAndIndices];
-    
     glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     
     // make the projection matrix
-    CC3GLMatrix *projection = [CC3GLMatrix matrix];
-    float h = 4.0f * self.frame.size.height / self.frame.size.width;
-    [projection populateFromFrustumLeft:-2 andRight:2 andBottom:-h/2 andTop:h/2 andNear:4 andFar:10];
-    glUniformMatrix4fv(_projectionUniform, 1, 0, projection.glMatrix);
+    //CC3GLMatrix *projection = [CC3GLMatrix matrix];
+    //float h = 4.0f * self.frame.size.height / self.frame.size.width;
+    //[projection populateFromFrustumLeft:-2 andRight:2 andBottom:-h/2 andTop:h/2 andNear:4 andFar:10];
+    //glUniformMatrix4fv(_projectionUniform, 1, 0, projection.glMatrix);
     
     // make the modelView matrix
-    CC3GLMatrix *modelView = [CC3GLMatrix matrix];
-    [modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
+    //CC3GLMatrix *modelView = [CC3GLMatrix matrix];
+    //[modelView populateFromTranslation:CC3VectorMake(0, 0, -5)];
+    //[modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
     
     // incorporate rotation
-    _currentRotation += displayLink.duration * 90;
-    [modelView rotateBy:CC3VectorMake(_currentRotation, _currentRotation, 0)];
+    //_currentRotation += displayLink.duration * 90;
+    //[modelView rotateBy:CC3VectorMake(_currentRotation, _currentRotation, 0)];
     
-    // disable rotation and translation
-    glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
+    // rotation and translation
+    //glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
     
     // set portion of view used for rendering
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
@@ -278,22 +294,25 @@ const GLubyte _indices[] = {
                           sizeof(Vertex), (GLvoid*) (sizeof(float) * 3));
     
     // 3
-    glDrawElements(GL_TRIANGLES, sizeof(_indices)/sizeof(_indices[0]),
-                   GL_UNSIGNED_BYTE, 0);
+    int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
+    //int numIndices = 36;
+    glDrawElements(GL_TRIANGLES, numIndices,
+                   GL_UNSIGNED_SHORT, 0);
     
     [_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 - (void)makeVerticesAndIndices {
-    /*float width = 2/10;
-    float height = 2/10;
+    float width = .2;
+    float height = .1;
     
     for (int i = 0; i < [_table getHeight]; i++)
     {
         for (int j = 0; j < [_table getWidth]; j++)
         {
-            float baseX = -1 + i * width;
-            float baseY = -1 + j * width;
+            float baseX = -1 + j * width;
+            float baseY = -1 + i * height;
+            
             Vertex vertex1 = {
                 {baseX, baseY + height, 0},
                 {1, 0, 0, 1}
@@ -304,28 +323,29 @@ const GLubyte _indices[] = {
             };
             Vertex vertex3 = {
                 {baseX + width, baseY, 0},
-                {0, 0, 1, 1}
+                {1, 0, 0, 1}
             };
             Vertex vertex4 = {
                 {baseX, baseY, 0},
-                {0, 0, 0, 1}
+                {0, 1, 0, 1}
             };
-            int startIndex = (i * [_table getWidth] + j) * 4;
+            int startIndex = ((i * [_table getWidth]) + j) * 4;
             _vertices[startIndex] = vertex1;
             _vertices[startIndex + 1] = vertex2;
             _vertices[startIndex + 2] = vertex3;
             _vertices[startIndex + 3] = vertex4;
-            
-            int indicesStartIndex = (i * [_table getWidth] + j) * 6;
-            _indices[indicesStartIndex] = startIndex;
-            _indices[indicesStartIndex + 1] = startIndex + 1;
-            _indices[indicesStartIndex + 2] = startIndex + 2;
-            _indices[indicesStartIndex + 3] = startIndex + 2;
-            _indices[indicesStartIndex + 4] = startIndex + 3;
-            _indices[indicesStartIndex + 5] = startIndex;
+
+            int indicesStartIndex = ((i * [_table getWidth]) + j) * 6;
+            GLushort glStartIndex = startIndex;
+            _indices[indicesStartIndex] = glStartIndex;
+            _indices[indicesStartIndex + 1] = glStartIndex + 1;
+            _indices[indicesStartIndex + 2] = glStartIndex + 2;
+            _indices[indicesStartIndex + 3] = glStartIndex + 2;
+            _indices[indicesStartIndex + 4] = glStartIndex + 3;
+            _indices[indicesStartIndex + 5] = glStartIndex;
             
         }
-    }*/
+    }
 }
 
 - (void)dealloc
