@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
+#import "Table.h"
+
 @interface OpenGLView : UIView {
     
     CAEAGLLayer* _eaglLayer;
@@ -27,6 +29,8 @@
 }
 
 + (Class)layerClass;
+
+- (void)setModel:(Table*)model;
 - (void)render:(CADisplayLink*)displayLink;
 
 @end

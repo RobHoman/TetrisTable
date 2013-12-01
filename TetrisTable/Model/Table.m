@@ -32,22 +32,22 @@
     {
         _width = TABLE_WIDTH;
         _height = TABLE_HEIGHT;
-    }
-    
-    self.rows = [[NSMutableArray alloc] init];
-    
-    //point each row at its own array
-    for (int i = 0; i < TABLE_HEIGHT; i++)
-    {
-        self.rows[i] = [[NSMutableArray alloc] init];
-    }
-    
-    //initialize the table with all black cells
-    for (int i = 0; i < TABLE_HEIGHT; i++)
-    {
-        for (int j = 0; j < TABLE_WIDTH; j++)
+        
+        self.rows = [[NSMutableArray alloc] init];
+        
+        //point each row at its own array
+        for (int i = 0; i < TABLE_HEIGHT; i++)
         {
-            self.rows[i][j] = [[Cell alloc] init:0:0:0];
+            self.rows[i] = [[NSMutableArray alloc] init];
+        }
+        
+        //initialize the table with all black cells
+        for (int i = 0; i < TABLE_HEIGHT; i++)
+        {
+            for (int j = 0; j < TABLE_WIDTH; j++)
+            {
+                self.rows[i][j] = [[Cell alloc] init:0:0:0];
+            }
         }
     }
     

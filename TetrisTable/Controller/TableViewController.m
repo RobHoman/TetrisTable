@@ -7,8 +7,13 @@
 //
 
 #import "TableViewController.h"
+#import "SimpleTableGenerator1.h"
 
 @interface TableViewController ()
+{
+    int _lastUpdateTime;
+    SimpleTableGenerator1* _tableGenerator;
+}
 
 @end
 
@@ -24,6 +29,8 @@
     if (self)
     {
         //initialization
+        _lastUpdateTime = -1; // -1 implies it has never been updated
+        _tableGenerator = [[SimpleTableGenerator1 alloc] init];
     }
     return self;
 }
@@ -44,7 +51,11 @@
     [super loadView];
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
     self.glView = [[OpenGLView alloc] initWithFrame:screenBounds];
+    
+    //set the first model
+    [self.glView setModel:[[Table alloc] init]];
     
     self.view = self.glView;
    
@@ -54,7 +65,7 @@
 {
     [super viewDidLoad];
 	
-    // TODO: Connect the display link to the update controller method here
+    // Connect the display link to a controller method
     CADisplayLink* displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(update:)];
     [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     
@@ -66,7 +77,19 @@
  */
 - (void)update:(CADisplayLink*)displayLink
 {
-    [self.glView render:displayLink];
+    // if a 'n' seconds have passed, get a new table model.
+    int n = 2;
+    int currentTime = CACurrentMediaTime();
+    if (currentTime - _lastUpdateTime > n)
+    {
+        _lastUpdateTime = currentTime;
+        
+        // then set the model on the view and render
+        Table* nextTable = [_tableGenerator getNextTable];
+        [self.glView setModel:nextTable];
+        [self.glView render:displayLink];
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning

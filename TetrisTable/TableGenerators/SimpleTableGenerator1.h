@@ -7,7 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Table.h"
 
 @interface SimpleTableGenerator1 : NSObject
+
+- (id)init;
+
+// later, we will let the generators manage the clock
+- (BOOL)hasNext;
+
+- (Table*)getNextTable;
 
 @end

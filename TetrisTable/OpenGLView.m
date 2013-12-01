@@ -26,9 +26,153 @@ typedef struct {
 
 @implementation OpenGLView
 
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupLayer];
+        [self setupContext];
+        [self setupDepthBuffer];
+        [self setupRenderBuffer];
+        [self setupFrameBuffer];
+        [self compileShaders];
+    }
+    return self;
+}
+
+- (void)render:(CADisplayLink*)displayLink
+{
+    glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    
+    // make the projection matrix
+    //CC3GLMatrix *projection = [CC3GLMatrix matrix];
+    //float h = 4.0f * self.frame.size.height / self.frame.size.width;
+    //[projection populateFromFrustumLeft:-2 andRight:2 andBottom:-h/2 andTop:h/2 andNear:4 andFar:10];
+    //glUniformMatrix4fv(_projectionUniform, 1, 0, projection.glMatrix);
+    
+    // make the modelView matrix
+    //CC3GLMatrix *modelView = [CC3GLMatrix matrix];
+    //[modelView populateFromTranslation:CC3VectorMake(0, 0, -5)];
+    //[modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
+    
+    // incorporate rotation
+    //_currentRotation += displayLink.duration * 90;
+    //[modelView rotateBy:CC3VectorMake(_currentRotation, _currentRotation, 0)];
+    
+    // rotation and translation
+    //glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
+    
+    // set portion of view used for rendering
+    glViewport(0, 0, self.frame.size.width, self.frame.size.height);
+    
+    // 2
+    glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(Vertex), 0);
+    glVertexAttribPointer(_colorSlot, 4, GL_FLOAT, GL_FALSE,
+                          sizeof(Vertex), (GLvoid*) (sizeof(float) * 3));
+    
+    // 3
+    int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
+    //int numIndices = 36;
+    glDrawElements(GL_TRIANGLES, numIndices,
+                   GL_UNSIGNED_SHORT, 0);
+    
+    [_context presentRenderbuffer:GL_RENDERBUFFER];
+}
+
+- (void)setModel:(Table*)model
+{
+    _table = model;
+    [self setupVBOs]; // when the model is set, the VBOs must be constructed
+}
+
+- (void)makeVerticesAndIndices
+{
+    float width = .2;
+    float height = .1;
+    
+    int switchValue = 0;
+    
+    for (int i = 0; i < [_table getHeight]; i++)
+    {
+        for (int j = 0; j < [_table getWidth]; j++)
+        {
+            //now make the vertices and indices
+            float baseX = -1 + j * width;
+            float baseY = -1 + i * height;
+            
+            Cell* cell = [_table getCell:i :j];
+            
+            float r = ((float)[cell getRed]) / 255;
+            float g = ((float)[cell getGreen]) / 255;
+            float b = ((float)[cell getBlue]) / 255;
+            float a = 1;
+            
+            Vertex vertex1 = [self makeVertex:baseX :baseY + height :0 :r :g :b :a];
+            Vertex vertex2 = [self makeVertex:baseX + width :baseY + height :0 :r :g :b :a];
+            Vertex vertex3 = [self makeVertex:baseX + width :baseY :0 :r :g :b :a];
+            Vertex vertex4 = [self makeVertex:baseX :baseY :0 :r :g :b :a];
+            
+            int startIndex = ((i * [_table getWidth]) + j) * 4;
+            _vertices[startIndex] = vertex1;
+            _vertices[startIndex + 1] = vertex2;
+            _vertices[startIndex + 2] = vertex3;
+            _vertices[startIndex + 3] = vertex4;
+
+            int indicesStartIndex = ((i * [_table getWidth]) + j) * 6;
+            GLushort glStartIndex = startIndex;
+            _indices[indicesStartIndex] = glStartIndex;
+            _indices[indicesStartIndex + 1] = glStartIndex + 1;
+            _indices[indicesStartIndex + 2] = glStartIndex + 2;
+            _indices[indicesStartIndex + 3] = glStartIndex + 2;
+            _indices[indicesStartIndex + 4] = glStartIndex + 3;
+            _indices[indicesStartIndex + 5] = glStartIndex;
+            
+        }
+    }
+}
+
+- (Vertex)makeVertex:(float) x :(float) y :(float) z :(float) r :(float) g :(float) b :(float) a
+{
+    Vertex v;
+    v.Position[0] = x;
+    v.Position[1] = y;
+    v.Position[2] = z;
+    v.Color[0] = r;
+    v.Color[1] = g;
+    v.Color[2] = b;
+    v.Color[3] = a;
+    return v;
+}
+
 + (Class)layerClass
 {
     return [CAEAGLLayer class];
+}
+
+- (void)setupVBOs
+{
+    //malloc the data object buffers
+    int numVertices = [_table getWidth] * [_table getHeight] * 4; //4 vertices per square
+    _vertices = (Vertex *) malloc(numVertices * sizeof(Vertex));
+    int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
+    _indices = (GLushort *) malloc(numIndices * sizeof(GLushort));
+    
+    //populate the data object buffers
+    [self makeVerticesAndIndices];
+    
+    GLuint vertexBuffer;
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(_vertices[0]), _vertices, GL_STATIC_DRAW);
+    
+    GLuint indexBuffer;
+    glGenBuffers(1, &indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(_indices[0]), _indices, GL_STATIC_DRAW);
+    
 }
 
 - (GLuint)compileShader:(NSString*)shaderName withType:(GLenum)shaderType
@@ -98,7 +242,7 @@ typedef struct {
     
     // use these linked shaders
     glUseProgram(programHandle);
-     
+    
     // get input values for vertex shader, enable use of arrays... ??
     _positionSlot = glGetAttribLocation(programHandle, "Position");
     _colorSlot = glGetAttribLocation(programHandle, "SourceColor");
@@ -157,163 +301,6 @@ typedef struct {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                               GL_RENDERBUFFER, _colorRenderBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderBuffer);
-}
-
-- (void)setupVBOs
-{
-    //malloc the data object buffers
-    int numVertices = [_table getWidth] * [_table getHeight] * 4; //4 vertices per square
-    _vertices = (Vertex *) malloc(numVertices * sizeof(Vertex));
-    int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
-    _indices = (GLushort *) malloc(numIndices * sizeof(GLushort));
-    
-    //populate the data object buffers
-    [self makeVerticesAndIndices];
-    
-    GLuint vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(_vertices[0]), _vertices, GL_STATIC_DRAW);
-    
-    GLuint indexBuffer;
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(_indices[0]), _indices, GL_STATIC_DRAW);
-    
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        //construct a table
-        _table = [[Table alloc] init];
-        
-        [self setupLayer];
-        [self setupContext];
-        [self setupDepthBuffer];
-        [self setupRenderBuffer];
-        [self setupFrameBuffer];
-        [self compileShaders];
-        [self setupVBOs];
-    }
-    return self;
-}
-
-- (Vertex)makeVertex:(float) x :(float) y :(float) z :(float) r :(float) g :(float) b :(float) a
-{
-    Vertex v;
-    v.Position[0] = x;
-    v.Position[1] = y;
-    v.Position[2] = z;
-    v.Color[0] = r;
-    v.Color[1] = g;
-    v.Color[2] = b;
-    v.Color[3] = a;
-    return v;
-}
-
-- (void)render:(CADisplayLink*)displayLink
-{
-    glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    
-    // make the projection matrix
-    //CC3GLMatrix *projection = [CC3GLMatrix matrix];
-    //float h = 4.0f * self.frame.size.height / self.frame.size.width;
-    //[projection populateFromFrustumLeft:-2 andRight:2 andBottom:-h/2 andTop:h/2 andNear:4 andFar:10];
-    //glUniformMatrix4fv(_projectionUniform, 1, 0, projection.glMatrix);
-    
-    // make the modelView matrix
-    //CC3GLMatrix *modelView = [CC3GLMatrix matrix];
-    //[modelView populateFromTranslation:CC3VectorMake(0, 0, -5)];
-    //[modelView populateFromTranslation:CC3VectorMake(sin(CACurrentMediaTime()), 0, -7)];
-    
-    // incorporate rotation
-    //_currentRotation += displayLink.duration * 90;
-    //[modelView rotateBy:CC3VectorMake(_currentRotation, _currentRotation, 0)];
-    
-    // rotation and translation
-    //glUniformMatrix4fv(_modelViewUniform, 1, 0, modelView.glMatrix);
-    
-    // set portion of view used for rendering
-    glViewport(0, 0, self.frame.size.width, self.frame.size.height);
-    
-    // 2
-    glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex), 0);
-    glVertexAttribPointer(_colorSlot, 4, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex), (GLvoid*) (sizeof(float) * 3));
-    
-    // 3
-    int numIndices = [_table getWidth] * [_table getHeight] * 2 * 3; // 3 indices per triangle, 2 triangles per square
-    //int numIndices = 36;
-    glDrawElements(GL_TRIANGLES, numIndices,
-                   GL_UNSIGNED_SHORT, 0);
-    
-    [_context presentRenderbuffer:GL_RENDERBUFFER];
-}
-
-- (void)makeVerticesAndIndices
-{
-    float width = .2;
-    float height = .1;
-    
-    int switchValue = 0;
-    
-    for (int i = 0; i < [_table getHeight]; i++)
-    {
-        for (int j = 0; j < [_table getWidth]; j++)
-        {
-            switchValue++;
-            if (switchValue % 3 == 0)
-            {
-                [[_table getCell:i :j] setColor:127 :127 :0];
-            }
-            else if (switchValue % 3 == 1)
-            {
-                [[_table getCell:i :j] setColor:127 :0 :127];
-            }
-            else
-            {
-                [[_table getCell:i :j] setColor:0 :127 :127];
-            }
-            
-            
-            //now make the vertices and indices
-            float baseX = -1 + j * width;
-            float baseY = -1 + i * height;
-            
-            Cell* cell = [_table getCell:i :j];
-            
-            float r = ((float)[cell getRed]) / 255;
-            float g = ((float)[cell getGreen]) / 255;
-            float b = ((float)[cell getBlue]) / 255;
-            float a = 1;
-            
-            Vertex vertex1 = [self makeVertex:baseX :baseY + height :0 :r :g :b :a];
-            Vertex vertex2 = [self makeVertex:baseX + width :baseY + height :0 :r :g :b :a];
-            Vertex vertex3 = [self makeVertex:baseX + width :baseY :0 :r :g :b :a];
-            Vertex vertex4 = [self makeVertex:baseX :baseY :0 :r :g :b :a];
-            
-            int startIndex = ((i * [_table getWidth]) + j) * 4;
-            _vertices[startIndex] = vertex1;
-            _vertices[startIndex + 1] = vertex2;
-            _vertices[startIndex + 2] = vertex3;
-            _vertices[startIndex + 3] = vertex4;
-
-            int indicesStartIndex = ((i * [_table getWidth]) + j) * 6;
-            GLushort glStartIndex = startIndex;
-            _indices[indicesStartIndex] = glStartIndex;
-            _indices[indicesStartIndex + 1] = glStartIndex + 1;
-            _indices[indicesStartIndex + 2] = glStartIndex + 2;
-            _indices[indicesStartIndex + 3] = glStartIndex + 2;
-            _indices[indicesStartIndex + 4] = glStartIndex + 3;
-            _indices[indicesStartIndex + 5] = glStartIndex;
-            
-        }
-    }
 }
 
 @end
