@@ -27,5 +27,6 @@
 }
 
 + (Class)layerClass;
+- (void)render:(CADisplayLink*)displayLink;
 
 @end

@@ -16,56 +16,6 @@ typedef struct {
     float Color[4];
 } Vertex;
 
-//const Vertex Vertices[] = {
-//    {{1, -1, 0}, {1, 0, 0, 1}},
-//    {{1, 1, 0}, {0, 1, 0, 1}},
-//    {{-1, 1, 0}, {0, 0, 1, 1}},
-//    {{-1, -1, 0}, {0, 0, 0, 1}}
-//};
-//
-//const GLubyte Indices[] = {
-//    0, 1, 2,
-//    2, 3, 0
-//};
-/*
-const Vertex _vertices[] = {
-    {{1, -1, 0}, {1, 0, 0, 1}},
-    {{1, 1, 0}, {1, 0, 0, 1}},
-    {{-1, 1, 0}, {0, 1, 0, 1}},
-    {{-1, -1, 0}, {0, 1, 0, 1}},
-    {{1, -1, -1}, {1, 0, 0, 1}},
-    {{1, 1, -1}, {1, 0, 0, 1}},
-    {{-1, 1, -1}, {0, 1, 0, 1}},
-    {{-1, -1, -1}, {0, 1, 0, 1}}
-};
- */
-
-
-/*const GLubyte Indices[] = {
-    // Front
-    0, 1, 2,
-    2, 3, 0,
-    // Back
-    4, 6, 5,
-    4, 7, 6,
-    // Left
-    2, 7, 3,
-    7, 6, 2,
-    // Right
-    0, 4, 1,
-    4, 1, 5,
-    // Top
-    6, 2, 1,
-    1, 6, 5,
-    // Bottom
-    0, 3, 7,
-    0, 7, 4
-};*/
-
-
-
-
-
 @interface OpenGLView () {
     Table* _table;
     Vertex* _vertices;
@@ -76,9 +26,13 @@ const Vertex _vertices[] = {
 
 @implementation OpenGLView
 
++ (Class)layerClass
+{
+    return [CAEAGLLayer class];
+}
 
-
-- (GLuint)compileShader:(NSString*)shaderName withType:(GLenum)shaderType {
+- (GLuint)compileShader:(NSString*)shaderName withType:(GLenum)shaderType
+{
     
     // load the shader
     NSString* shaderPath = [[NSBundle mainBundle] pathForResource:shaderName
@@ -117,7 +71,8 @@ const Vertex _vertices[] = {
     
 }
 
-- (void)compileShaders {
+- (void)compileShaders
+{
     
     // compile the vertex and fragemnt shaders
     GLuint vertexShader = [self compileShader:@"SimpleVertex"
@@ -157,7 +112,55 @@ const Vertex _vertices[] = {
     //_modelViewUniform = glGetUniformLocation(programHandle, "Modelview");
 }
 
-- (void)setupVBOs {
+- (void)setupLayer
+{
+    _eaglLayer = (CAEAGLLayer*) self.layer;
+    _eaglLayer.opaque = YES;
+}
+
+- (void)setupContext
+{
+    EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
+    _context = [[EAGLContext alloc] initWithAPI:api];
+    
+    if (!_context) {
+        NSLog(@"Failed to initailize OpenGLES 2.0 context");
+        exit(1);
+        
+    }
+    
+    if (![EAGLContext setCurrentContext:_context]) {
+        NSLog(@"Failed to set current OpenGL context");
+        exit(1);
+    }
+}
+
+- (void)setupDepthBuffer
+{
+    glGenRenderbuffers(1, &_depthRenderBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, self.frame.size.width, self.frame.size.height);
+}
+
+- (void)setupRenderBuffer
+{
+    glGenRenderbuffers(1, &_colorRenderBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, _colorRenderBuffer);
+    [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_eaglLayer];
+}
+
+- (void)setupFrameBuffer
+{
+    GLuint framebuffer;
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                              GL_RENDERBUFFER, _colorRenderBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderBuffer);
+}
+
+- (void)setupVBOs
+{
     //malloc the data object buffers
     int numVertices = [_table getWidth] * [_table getHeight] * 4; //4 vertices per square
     _vertices = (Vertex *) malloc(numVertices * sizeof(Vertex));
@@ -179,11 +182,6 @@ const Vertex _vertices[] = {
     
 }
 
-- (void)setupDisplayLink {
-    CADisplayLink* displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(render:)];
-    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-}
-
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -198,16 +196,12 @@ const Vertex _vertices[] = {
         [self setupFrameBuffer];
         [self compileShaders];
         [self setupVBOs];
-        [self setupDisplayLink];
     }
     return self;
 }
 
-+ (Class)layerClass {
-    return [CAEAGLLayer class];
-}
-
-- (Vertex)makeVertex:(float) x :(float) y :(float) z :(float) r :(float) g :(float) b :(float) a {
+- (Vertex)makeVertex:(float) x :(float) y :(float) z :(float) r :(float) g :(float) b :(float) a
+{
     Vertex v;
     v.Position[0] = x;
     v.Position[1] = y;
@@ -219,49 +213,8 @@ const Vertex _vertices[] = {
     return v;
 }
 
-- (void)setupLayer {
-    _eaglLayer = (CAEAGLLayer*) self.layer;
-    _eaglLayer.opaque = YES;
-}
-
-- (void)setupContext {
-    EAGLRenderingAPI api = kEAGLRenderingAPIOpenGLES2;
-    _context = [[EAGLContext alloc] initWithAPI:api];
-    
-    if (!_context) {
-        NSLog(@"Failed to initailize OpenGLES 2.0 context");
-        exit(1);
-        
-    }
-    
-    if (![EAGLContext setCurrentContext:_context]) {
-        NSLog(@"Failed to set current OpenGL context");
-        exit(1);
-    }
-}
-
-- (void)setupRenderBuffer {
-    glGenRenderbuffers(1, &_colorRenderBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _colorRenderBuffer);
-    [_context renderbufferStorage:GL_RENDERBUFFER fromDrawable:_eaglLayer];
-}
-
-- (void)setupDepthBuffer {
-    glGenRenderbuffers(1, &_depthRenderBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, self.frame.size.width, self.frame.size.height);
-}
-
-- (void)setupFrameBuffer {
-    GLuint framebuffer;
-    glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                              GL_RENDERBUFFER, _colorRenderBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderBuffer);
-}
-
-- (void)render:(CADisplayLink*)displayLink {
+- (void)render:(CADisplayLink*)displayLink
+{
     glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -302,7 +255,8 @@ const Vertex _vertices[] = {
     [_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-- (void)makeVerticesAndIndices {
+- (void)makeVerticesAndIndices
+{
     float width = .2;
     float height = .1;
     
@@ -361,15 +315,5 @@ const Vertex _vertices[] = {
         }
     }
 }
-
-- (void)dealloc
-{
-    //[_context release]; //nonARC
-    //_context = nil; //nonARC
-    //[super dealloc]; //nonARC
-    
-}
-
-
 
 @end

@@ -11,15 +11,15 @@
 
 @implementation AppDelegate
 
-@synthesize glView=_glView;
+//@synthesize glView=_glView;
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    self.glView = [[OpenGLView alloc] initWithFrame:screenBounds];//] autorelease]; //no autorelease in ARC
-    [self.window addSubview:_glView];
-    
+    // Pass directly to the TableViewController
+    TableViewController* tableViewController = [[TableViewController alloc] init];
+
+    [self.window addSubview:[tableViewController view]];    
     
     return YES;
 }

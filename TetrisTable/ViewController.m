@@ -18,9 +18,11 @@
 
 @implementation ViewController
 
+/*
 + (Class)layerClass {
     return [CAEAGLLayer class];
 }
+*/
 
 - (void)setupLayer {
     //_eaglLayer = (CAEAGLLayer*) self.layer;

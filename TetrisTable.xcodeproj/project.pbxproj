@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04AF4A0C1849AC430076B381 /* TableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AF4A0B1849AC430076B381 /* TableView.m */; };
+		04AF4A131849AD5B0076B381 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AF4A121849AD5B0076B381 /* TableViewController.m */; };
+		04B97686184B9AD900E701C8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04B97685184B9AD900E701C8 /* Main.storyboard */; };
+		04B9768D184BB59500E701C8 /* SimpleTableGenerator1.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B9768C184BB59500E701C8 /* SimpleTableGenerator1.m */; };
 		C584E0BB181366EB00E4A252 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C584E0BA181366EB00E4A252 /* Foundation.framework */; };
 		C584E0BD181366EB00E4A252 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C584E0BC181366EB00E4A252 /* CoreGraphics.framework */; };
 		C584E0BF181366EB00E4A252 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C584E0BE181366EB00E4A252 /* UIKit.framework */; };
@@ -15,7 +19,6 @@
 		C584E0C9181366EB00E4A252 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C584E0C7181366EB00E4A252 /* InfoPlist.strings */; };
 		C584E0CB181366EB00E4A252 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C584E0CA181366EB00E4A252 /* main.m */; };
 		C584E0CF181366EB00E4A252 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C584E0CE181366EB00E4A252 /* AppDelegate.m */; };
-		C584E0D2181366EB00E4A252 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C584E0D0181366EB00E4A252 /* Main.storyboard */; };
 		C584E0D4181366EB00E4A252 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584E0D3181366EB00E4A252 /* Shader.fsh */; };
 		C584E0D6181366EB00E4A252 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584E0D5181366EB00E4A252 /* Shader.vsh */; };
 		C584E0D9181366EB00E4A252 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C584E0D8181366EB00E4A252 /* ViewController.m */; };
@@ -49,6 +52,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04AF4A0A1849AC430076B381 /* TableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableView.h; sourceTree = "<group>"; };
+		04AF4A0B1849AC430076B381 /* TableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableView.m; sourceTree = "<group>"; };
+		04AF4A111849AD5B0076B381 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
+		04AF4A121849AD5B0076B381 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
+		04B97685184B9AD900E701C8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		04B9768B184BB59500E701C8 /* SimpleTableGenerator1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTableGenerator1.h; sourceTree = "<group>"; };
+		04B9768C184BB59500E701C8 /* SimpleTableGenerator1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTableGenerator1.m; sourceTree = "<group>"; };
 		C584E0B7181366EB00E4A252 /* TetrisTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TetrisTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C584E0BA181366EB00E4A252 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C584E0BC181366EB00E4A252 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -61,7 +71,6 @@
 		C584E0CC181366EB00E4A252 /* TetrisTable-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TetrisTable-Prefix.pch"; sourceTree = "<group>"; };
 		C584E0CD181366EB00E4A252 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C584E0CE181366EB00E4A252 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C584E0D1181366EB00E4A252 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C584E0D3181366EB00E4A252 /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
 		C584E0D5181366EB00E4A252 /* Shader.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		C584E0D7181366EB00E4A252 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -120,6 +129,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04AF4A091849AC430076B381 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				04AF4A0A1849AC430076B381 /* TableView.h */,
+				04AF4A0B1849AC430076B381 /* TableView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		04AF4A101849AD5B0076B381 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				04AF4A111849AD5B0076B381 /* TableViewController.h */,
+				04AF4A121849AD5B0076B381 /* TableViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		04B9768A184BB59500E701C8 /* TableGenerators */ = {
+			isa = PBXGroup;
+			children = (
+				04B9768B184BB59500E701C8 /* SimpleTableGenerator1.h */,
+				04B9768C184BB59500E701C8 /* SimpleTableGenerator1.m */,
+			);
+			path = TableGenerators;
+			sourceTree = "<group>";
+		};
 		C584E0AE181366EB00E4A252 = {
 			isa = PBXGroup;
 			children = (
@@ -156,12 +192,15 @@
 		C584E0C4181366EB00E4A252 /* TetrisTable */ = {
 			isa = PBXGroup;
 			children = (
+				04B9768A184BB59500E701C8 /* TableGenerators */,
+				04B97685184B9AD900E701C8 /* Main.storyboard */,
+				04AF4A101849AD5B0076B381 /* Controller */,
+				04AF4A091849AC430076B381 /* View */,
 				C597C1681813682B006EC06A /* Model */,
 				C584E0CD181366EB00E4A252 /* AppDelegate.h */,
 				C584E0CE181366EB00E4A252 /* AppDelegate.m */,
 				C5B2670918278B26004363AB /* SimpleVertex.glsl */,
 				C5B2670B18278C16004363AB /* SimpleFragment.glsl */,
-				C584E0D0181366EB00E4A252 /* Main.storyboard */,
 				C584E0D3181366EB00E4A252 /* Shader.fsh */,
 				C584E0D5181366EB00E4A252 /* Shader.vsh */,
 				C584E0D7181366EB00E4A252 /* ViewController.h */,
@@ -325,12 +364,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04B97686184B9AD900E701C8 /* Main.storyboard in Resources */,
 				C584E0D6181366EB00E4A252 /* Shader.vsh in Resources */,
 				C584E0DB181366EB00E4A252 /* Images.xcassets in Resources */,
 				C5B2670C18278C16004363AB /* SimpleFragment.glsl in Resources */,
 				C584E0D4181366EB00E4A252 /* Shader.fsh in Resources */,
 				C584E0C9181366EB00E4A252 /* InfoPlist.strings in Resources */,
-				C584E0D2181366EB00E4A252 /* Main.storyboard in Resources */,
 				C5B2670A18278B26004363AB /* SimpleVertex.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,9 +395,12 @@
 				C5B87A5518306E5F00DD8A27 /* CC3Math.m in Sources */,
 				C597C16D181368CA006EC06A /* Cell.m in Sources */,
 				C584E0CF181366EB00E4A252 /* AppDelegate.m in Sources */,
+				04AF4A0C1849AC430076B381 /* TableView.m in Sources */,
+				04AF4A131849AD5B0076B381 /* TableViewController.m in Sources */,
 				C597C170181368D8006EC06A /* Table.m in Sources */,
 				C5B87A5418306E5F00DD8A27 /* CC3Kazmath.c in Sources */,
 				C584E0CB181366EB00E4A252 /* main.m in Sources */,
+				04B9768D184BB59500E701C8 /* SimpleTableGenerator1.m in Sources */,
 				C5B87A5218306E5F00DD8A27 /* CC3Foundation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -390,14 +432,6 @@
 				C584E0C8181366EB00E4A252 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		C584E0D0181366EB00E4A252 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C584E0D1181366EB00E4A252 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		C584E0EA181366EB00E4A252 /* InfoPlist.strings */ = {

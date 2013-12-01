@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TableViewController.h"
 #import "OpenGLView.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate> {
@@ -16,6 +17,6 @@
 }
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, retain) IBOutlet OpenGLView *glView;
+//@property (nonatomic, retain) IBOutlet OpenGLView *glView;
 
 @end

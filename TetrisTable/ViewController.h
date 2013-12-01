@@ -17,6 +17,6 @@
     
 }
 
-+ (Class)layerClass;
+//+ (Class)layerClass;
 
 @end
